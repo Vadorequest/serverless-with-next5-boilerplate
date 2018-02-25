@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="23px" viewBox="0 0 28 23" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs><style><![CDATA[.logo:target{fill: #ffffff;}]]></style></defs>
+    <g class="logo" id="white" fill="#F26D61">
+        <polygon id="Fill-1" points="0 17.491283 0 22.0914786 3.39331861 22.0914786 4.91654556 17.491283"></polygon>
+        <polygon id="Fill-2" points="0 8.74564889 0 13.3458444 6.28941042 13.3458444 7.81248996 8.74564889"></polygon>
+        <polygon id="Fill-3" points="0 1.47413815e-05 0 4.60006284 9.1852074 4.60006284 10.7085818 1.47413815e-05"></polygon>
+        <polygon id="Fill-4" points="15.5541181 1.47413815e-05 14.0310386 4.60006284 27.7773768 4.60006284 27.7773768 1.47413815e-05"></polygon>
+        <polygon id="Fill-5" points="12.6582769 8.74564889 11.1350499 13.3458444 27.7773326 13.3458444 27.7773326 8.74564889"></polygon>
+        <polygon id="Fill-6" points="9.76230301 17.491283 8.23922347 22.0914786 27.7773031 22.0914786 27.7773031 17.491283"></polygon>
+    </g>
+</svg>

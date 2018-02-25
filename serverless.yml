@@ -1,27 +1,38 @@
 # Welcome to serverless. Read the docs
 # https://serverless.com/framework/docs/
 
-# Serverless.yml is the configuration the CLI
-# uses to deploy your code to your provider of choice
-
-# The `service` block is the name of the service
 service: serverless-with-next
 
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-jest-plugin
+
+# Enable auto-packing of external modules
+# See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
+custom:
+  webpackIncludeModules: true
 
 # The `provider` block defines where your service will be deployed
 provider:
   name: aws
   runtime: nodejs6.10
 
+package:
+  individually: true
+
 # The `functions` block defines what code to deploy
 functions:
-  helloWorld:
-    handler: handler.helloWorld
-    # The `events` block defines how to trigger the handler.helloWorld code
+  server:
+    handler: lambdas/server.handler
     events:
       - http:
           method: get
-          path: /{proxy+}
+          path: /
+      - http:
+          method: get
+          path: /_next/{proxy+}
+    package:
+      include:
+        - ../.next/**
+        - ../static/**
