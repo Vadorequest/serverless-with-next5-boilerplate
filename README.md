@@ -105,7 +105,7 @@ This tutorial assume:
             }))
             ```
         1. Run `sls invoke local -f helloWorld`
-        1. It should print (on the console)
+        1. It should print (on the server)
             ![](./ss/2018-02-25%2013.39.14%20-%20test%20source%20maps.png)
             
             We can see `ERROR in ./handler.js` with the line number. The stacktrace doesn't show the right line though. (if you know how to fix that, let met know!)
@@ -125,10 +125,29 @@ This tutorial assume:
     1. Go to http://localhost:3000/, it should print (on the browser)
         ![](./ss/2018-02-25%2014.02.18%20-%20sls%20offline%20not%20found.png)
     
-    1. Go to http://localhost:3000/hello-world, it should print (on the console)
+    1. Go to http://localhost:3000/hello-world, it should print (on the server)
         ![](./ss/2018-02-25%2014.03.53%20-%20sls%20offline%20hello-world.png)
         (The web page should be blank)
     
     1. Serverless offline is a great tool to do the dev locally, by running a local node server to handle request and mock AWS lambda behavior for quick development.
         It isn't perfect (can't mock everything) but does help quite a lot.
         
+1. Redirecting all requests to our handler entrypoint
+    
+    1. Update the `serverless.yml`:
+        ```yml
+        functions:
+          helloWorld:
+            handler: handler.helloWorld
+            # The `events` block defines how to trigger the handler.helloWorld code
+            events:
+              - http:
+                  method: get
+                  path: /{proxy+} # This is what captures all get requests and redirect them to our handler.helloWorld function
+        ```
+    1. Now, go to:
+        - http://localhost:3000/hello-world
+        - http://localhost:3000/hello
+        - http://localhost:3000/whatever
+        - http://localhost:3000/whatever/nested
+    1. You'll notice all of them return the same thing (on the server)

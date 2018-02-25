@@ -23,6 +23,5 @@ functions:
     # The `events` block defines how to trigger the handler.helloWorld code
     events:
       - http:
-          path: hello-world
           method: get
-          cors: true
+          path: /{proxy+}
