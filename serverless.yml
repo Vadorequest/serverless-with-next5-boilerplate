@@ -7,6 +7,9 @@
 # The `service` block is the name of the service
 service: serverless-with-next
 
+plugins:
+  - serverless-webpack
+
 # The `provider` block defines where your service will be deployed
 provider:
   name: aws

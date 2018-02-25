@@ -1,16 +1,12 @@
-'use strict';
-
-module.exports.helloWorld = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-    },
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
-
-  callback(null, response);
+// eslint-disable-next-line import/prefer-default-export
+export const helloWorld = (event, context, callback) => {
+  const p = new Promise((resolve) => {
+    resolve('success');
+  });
+  p
+    .then(() => callback(null, {
+      message: 'Go Serverless Webpack (Ecma Script) v1.0! First module!',
+      event,
+    }))
+    .catch(e => callback(e));
 };
