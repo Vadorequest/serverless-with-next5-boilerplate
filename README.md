@@ -1,7 +1,16 @@
 Serverless with Next
 ===================
 
-This is a tutorial to make Serverless (https://serverless.com) work with Next.js (https://github.com/zeit/next.js/).
+This is a tutorial/showcase to make Serverless (https://serverless.com) work with Next.js (https://github.com/zeit/next.js/).
+It's also an in-depth explanation of what are the steps to put those two together.
+The goal being to make a [Serverless template](https://github.com/serverless/serverless/tree/master/lib/plugins/create/templates) for ease of use.
+
+# Getting started
+
+- `git clone git@github.com:Vadorequest/serverless-with-next.git`
+- `npm i`
+- `npm start` (starts development server)
+- Go to `http://localhost:3000/` (hello world) and `http://localhost:3000/test` (404)
 
 # WHY?
 
