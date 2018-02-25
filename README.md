@@ -30,6 +30,13 @@ This tutorial assume:
 - an AWS account, `sls deploy` commands will deploy on AWS (another provider is possible, but the `serverless.yml` will need to be modified)
 - node < `6.9.3` installed, I personally used `8.9.4`, doesn't matter so much because we use webpack. (See [supported-languages](https://serverless.com/framework/docs/platform/commands/run#supported-languages))
 
+# Acknowledgements
+
+I am just a beginner with Serverless and Next.js
+
+https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
+but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
+
 # Steps (tutorial, from scratch)
 
 1. Run `sls create --template hello-world --path serverless-with-next` (optionally ignore `.idea` folder)
@@ -249,3 +256,9 @@ This tutorial assume:
         
         We package each function individually (doesn't change anything now because we only have one)
         But we basically don't want to package the `.next` build with our other endpoints.
+        
+        
+## Issues
+    
+- The `npm run deploy` doesn't currently work. It actually does, but when visiting the AWS endpoint, I get `{"message": "Internal server error"}`, and the logs show `Unable to import module 'lambdas/server': Error` which is rather cryptic and unhelpful.
+The development environment seems to work fine, I probably missed some webpack config or something. 
