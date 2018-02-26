@@ -1,9 +1,22 @@
 const slsw = require("serverless-webpack");
 const nodeExternals = require("webpack-node-externals");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const plugins = [
+  new CopyWebpackPlugin([
+    {
+      from: '.next/**',
+    },
+    {
+      from: 'static/**',
+    },
+  ])
+];
 
 module.exports = {
   entry: slsw.lib.entries,
   target: "node",
+  plugins,
   // Generate sourcemaps for proper error messages
   devtool: 'source-map',
   // Since 'aws-sdk' is not compatible with webpack,

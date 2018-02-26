@@ -1,4 +1,12 @@
 {
   "plugins": ["source-map-support", "transform-runtime"],
-  "presets": ["env", "stage-3", "next/babel"]
+  "presets": [
+    ["env", {
+      "targets": {
+        "node": "6.10"
+      }
+    }],
+    "stage-3",
+    "next/babel"
+  ]
 }

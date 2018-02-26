@@ -11,12 +11,16 @@ plugins:
 # Enable auto-packing of external modules
 # See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
 custom:
-  webpackIncludeModules: true
+  webpackIncludeModules:
+    forceInclude:
+      - next
 
 # The `provider` block defines where your service will be deployed
 provider:
   name: aws
   runtime: nodejs6.10
+#  memorySize: 3008
+  timeout: 30
 
 package:
   individually: true
@@ -32,7 +36,7 @@ functions:
       - http:
           method: get
           path: /_next/{proxy+}
-    package:
-      include:
-        - ../.next/**
-        - ../static/**
+#    package:
+#      include:
+#        - ../.next/**
+#        - ../static/**

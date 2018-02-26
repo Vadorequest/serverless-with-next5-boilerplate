@@ -269,5 +269,23 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
         
 ## Issues
     
-- The `npm run deploy` doesn't currently work. It actually does, but when visiting the AWS endpoint, I get `{"message": "Internal server error"}`, and the logs show `Unable to import module 'lambdas/server': Error` which is rather cryptic and unhelpful.
-The development environment seems to work fine, I probably missed some webpack config or something. 
+- On AWS, I can't get Next.js to work:
+
+    1. When I host the packaged version of next (.next folder), it fails on AWS with 
+        ```
+        { Error: Cannot find module '/Users/vadorequest/dev/serverless-with-next/node_modules/next/dist/pages/_document.js'
+        at Function.Module._resolveFilename (module.js:469:15)
+        at Function.Module._load (module.js:417:25)
+        at Module.require (module.js:497:17)
+        at require (internal/module.js:20:19)
+        at Object.7 (/var/task/.next/dist/bundles/pages/_document.js:86:18)
+        at __webpack_require__ (/var/task/.next/dist/bundles/pages/_document.js:23:31)
+        at Object.6 (/var/task/.next/dist/bundles/pages/_document.js:78:18)
+        at __webpack_require__ (/var/task/.next/dist/bundles/pages/_document.js:23:31)
+        at /var/task/.next/dist/bundles/pages/_document.js:70:18
+        at Object.<anonymous> (/var/task/.next/dist/bundles/pages/_document.js:73:10) code: 'MODULE_NOT_FOUND' }
+        ```
+    2. I manually replaced those paths to match AWS, basically replaced `/Users/vadorequest/dev/serverless-with-next` to `/var/task` 
+        in the `.next` folder. Once uploaded to AWS and hitting my endpoint `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev` 
+        it loads for 30 seconds and then time out. Logs are empty, I don't know what's happening, at first I assumed the first Next.js 
+        load was slow (default timeout 6s)
