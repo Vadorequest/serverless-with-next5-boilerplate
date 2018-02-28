@@ -16,6 +16,13 @@ const plugins = [
 module.exports = {
   entry: slsw.lib.entries,
   target: "node",
+
+  // Necessary for __dirname and __filename to work correctly when bundling with Webpack for the dev environment.
+  // XXX See https://github.com/webpack/webpack/issues/1599
+  node: {
+    __dirname: true,
+    __filename: true,
+  },
   plugins,
   // Generate sourcemaps for proper error messages
   devtool: 'source-map',

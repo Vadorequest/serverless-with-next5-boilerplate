@@ -12,11 +12,13 @@
     "deploy:staging": "cross-env-shell NODE_ENV=staging \"npm run build:staging && serverless deploy -v --package .serverless\"",
     "deployf:staging": "cross-env-shell NODE_ENV=staging \"npm run build:staging && serverless deploy -v --package .serverless -f server\"",
     "deploy:production": "cross-env-shell NODE_ENV=production \"npm run build:production && serverless deploy -v --package .serverless\"",
+    "simulate": "sls simulate apigateway -p 5000",
     "test:create": "sls create test --path {function}",
     "test": "jest"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "4.4.2"
+    "copy-webpack-plugin": "4.4.2",
+    "serverless-plugin-simulate": "0.0.17"
   },
   "dependencies": {
     "aws-sdk": "2.194.0",

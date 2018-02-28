@@ -5,6 +5,7 @@ frameworkVersion: ">=1.26.1"
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-plugin-simulate
   - serverless-jest-plugin
 
 # Enable auto-packing of external modules
@@ -14,6 +15,11 @@ custom:
 #  webpackIncludeModules:
 #    forceInclude:
 #      - next
+  simulate:
+    dist: docker
+#    services:
+#      file: docker-compose.yml
+#      projectName: serverless-with-next
 
 # The `provider` block defines where your service will be deployed
 provider:
@@ -31,8 +37,16 @@ functions:
     handler: lambdas/server.handler
     events:
       - http:
-          method: get
+          method: GET
           path: /
       - http:
-          method: get
+          method: GET
           path: /_next/{proxy+}
+
+  status:
+    handler: lambdas/status/status.handler
+    events:
+      - http:
+          method: get
+          path: status
+

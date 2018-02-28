@@ -271,6 +271,24 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
     
 - On AWS, I can't get Next.js to work:
 
-    1. Once uploaded to AWS and hitting my endpoint `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev` 
-        it loads for 30 seconds and then time out. Logs are empty, I don't know what's happening, at first I assumed the first Next.js 
-        load was slow (default timeout 6s) but it's not the reason.
+    1. `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev` works almost correctly, but it doesn't act as a main entry point for the Next.js application.
+        Basically, only the index is handled by Next.js, but not the other pages. It should display a 404 page.
+        Console error: `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js net::ERR_ABORTED`
+        The URL is wrong, it should be `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js` (the `dev` part is missing)
+        
+        When I go to `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js` manually, I get the following: `Error: INVALID_BUILD_ID`
+        
+        ```
+        Error: INVALID_BUILD_ID
+        at Server._callee12$ (/var/task/node_modules/next/dist/server/index.js:632:29)
+        at tryCatch (/var/task/node_modules/regenerator-runtime/runtime.js:62:40)
+        at GeneratorFunctionPrototype.invoke [as _invoke] (/var/task/node_modules/regenerator-runtime/runtime.js:296:22)
+        at GeneratorFunctionPrototype.prototype.(anonymous function) [as next] (/var/task/node_modules/regenerator-runtime/runtime.js:114:21)
+        at step (/var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)
+        at /var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:35:14
+        at Promise.F (/var/task/node_modules/core-js/library/modules/_export.js:35:28)
+        at Object.<anonymous> (/var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:14:12)
+        at Object._nextBuildIdPagePathJs [as fn] (/var/task/node_modules/next/dist/server/index.js:714:27)
+        at Router._callee$ (/var/task/node_modules/next/dist/server/router.js:81:60)
+
+        ```

@@ -9,3 +9,4 @@ jspm_packages
 .next
 
 .DS_Store
+.sls-simulate-registry
