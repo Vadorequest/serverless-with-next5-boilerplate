@@ -1,7 +1,6 @@
-# Welcome to serverless. Read the docs
-# https://serverless.com/framework/docs/
-
 service: serverless-with-next
+
+frameworkVersion: ">=1.26.1"
 
 plugins:
   - serverless-webpack
@@ -11,9 +10,10 @@ plugins:
 # Enable auto-packing of external modules
 # See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
 custom:
-  webpackIncludeModules:
-    forceInclude:
-      - next
+  webpackIncludeModules: true
+#  webpackIncludeModules:
+#    forceInclude:
+#      - next
 
 # The `provider` block defines where your service will be deployed
 provider:
@@ -36,7 +36,3 @@ functions:
       - http:
           method: get
           path: /_next/{proxy+}
-#    package:
-#      include:
-#        - ../.next/**
-#        - ../static/**
