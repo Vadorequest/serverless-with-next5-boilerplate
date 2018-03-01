@@ -3,6 +3,7 @@ import es from 'aws-serverless-express';
 
 import { failure } from "../utils/browserResponse";
 import { isHostedOnAWS } from "../utils/aws";
+
 // XXX next.dev enabled HMR, which we don't want if not in development mode, or when we are on AWS's infrastructure
 const app = next({ dev: !isHostedOnAWS() && process.env.NODE_ENV === 'development' });
 const handle = app.getRequestHandler();
