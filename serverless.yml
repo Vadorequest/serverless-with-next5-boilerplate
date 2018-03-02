@@ -48,7 +48,7 @@ package:
 
 functions:
   server:
-    handler: src/functions/server/server.handler
+    handler: src/functions/server/next.handler
     events:
       - http:
           method: GET
