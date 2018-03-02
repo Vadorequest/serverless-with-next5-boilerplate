@@ -13,14 +13,19 @@ plugins:
 # Enable auto-packing of external modules
 # See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
 custom:
+  apigwBinary:
+    types:
+      - '*/*'
   webpackIncludeModules: true
 #  webpackIncludeModules:
 #    forceInclude:
 #      - next
   domains:
-    development: 'swn.dev.vadorequest.fr'
+    development: 'development.example.com'
+    staging: 'staging.example.com'
   memorySizes: # TODO Check how much is actually needed
     development: 512
+    staging: 512
   customDomain:
     domainName: ${self:custom.domains.${self:provider.stage}}
 #    basePath: '' # This will be prefixed to all routes
@@ -42,25 +47,21 @@ provider:
   environment:
     NODE_ENV: ${self:provider.stage}
 
-
 package:
   individually: true
 
 functions:
-  server:
-    handler: src/functions/server/server.handler
-    events:
-      - http:
-          method: GET
-          path: /
-      - http:
-          method: GET
-          path: /_next/{proxy+}
-
   status:
     handler: src/functions/status/status.handler
     events:
       - http:
           method: get
           path: status
+
+  server:
+    handler: src/functions/server/server.handler
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
+
 

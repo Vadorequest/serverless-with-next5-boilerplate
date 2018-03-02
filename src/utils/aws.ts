@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path'
 
 /**
  * Figures whether the project is currently hosted on AWS or not.
@@ -6,7 +6,8 @@ import path from 'path';
  * See https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html
  * @returns {boolean}
  */
-export const isHostedOnAWS = () => !!(process.env.LAMBDA_TASK_ROOT || process.env.AWS_EXECUTION_ENV);
+// export const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+export const isHostedOnAWS = process.env.LAMBDA_TASK_ROOT || process.env.AWS_EXECUTION_ENV
 
 /**
  * Resolve project root directory.
@@ -16,8 +17,8 @@ export const isHostedOnAWS = () => !!(process.env.LAMBDA_TASK_ROOT || process.en
  * @returns {string}
  */
 export const resolveProjectRoot = (additionalPath = '') => {
-  return path.resolve(__dirname, '..', '..', additionalPath);
-};
+	return path.resolve(__dirname, '..', '..', additionalPath)
+}
 
 /**
  * Shortcut/alias to resolve the __dirname absolute path.
@@ -27,5 +28,5 @@ export const resolveProjectRoot = (additionalPath = '') => {
  * @returns {string}
  */
 export const absoluteDirname = (additionalPath = '') => {
-  return resolveProjectRoot(additionalPath);
-};
+	return resolveProjectRoot(additionalPath)
+}

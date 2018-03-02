@@ -1,9 +1,10 @@
+const withTypescript = require('@zeit/next-typescript')
 module.exports = {
-  webpack: (config, { buildId, dev, isServer, defaultLoaders }) => {
-    config.node = {
-      fs: 'empty',
-      module: "empty",
-    };
-    return config;
-  },
-};
+	webpack: (config, { buildId, dev, isServer, defaultLoaders }) => {
+		config.node = {
+			fs: 'empty',
+			module: 'empty',
+		}
+		return config
+	},
+}

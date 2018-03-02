@@ -1,4 +1,4 @@
-import { trace } from './logging';
+import { trace } from './logging'
 
 /**
  * Failure response
@@ -10,12 +10,12 @@ import { trace } from './logging';
  *
  * @example callback(null, await failure({ status: false }, e)); // where "e" is an Error
  */
-export const failure = async (body, error, props = { statusCode: 500 }) => {
-  return {
-    ...props,
-    body: await trace(error, body, {
-      logConsole: true,
-      injectIntoResult: process.env.NODE_ENV !== 'production',
-    }),
-  }
-};
+export const failure = async (body: any, error: any, props = { statusCode: 500 }) => {
+	return {
+		...props,
+		body: await trace(error, body, {
+			logConsole: true,
+			injectIntoResult: process.env.NODE_ENV !== 'production',
+		}),
+	}
+}
