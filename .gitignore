@@ -10,3 +10,4 @@ jspm_packages
 
 .DS_Store
 .sls-simulate-registry
+dist

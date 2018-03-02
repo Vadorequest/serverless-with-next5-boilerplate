@@ -1,0 +1,15 @@
+{
+	"rules": {
+		"no-duplicate-variable": true,
+		"class-name": true,
+		"semicolon": [false, "always"],
+		"eofline": true,
+		"no-trailing-whitespace": true,
+		"no-var-keyword": true,
+		"quotemark": [true, "single"],
+		"trailing-comma": [true],
+		"triple-equals": [true],
+		"adjacent-overload-signatures": true,
+		"restrict-plus-operands": true
+	}
+}
