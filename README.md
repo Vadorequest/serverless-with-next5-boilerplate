@@ -292,3 +292,5 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
         at Router._callee$ (/var/task/node_modules/next/dist/server/router.js:81:60)
 
         ```
+        
+        => Workaround: Use custom domain, it fixes the missing `dev` part of the path, but other paths than "/" are still not handled by the server endpoint

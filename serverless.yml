@@ -1,7 +1,7 @@
 service:
   name: serverless-with-next
 
-frameworkVersion: "1.26.1"
+frameworkVersion: ">=1.26.1"
 
 plugins:
   - serverless-webpack
@@ -32,7 +32,6 @@ custom:
 #      file: docker-compose.yml
 #      projectName: serverless-with-next
 
-# The `provider` block defines where your service will be deployed
 provider:
   name: aws
   runtime: nodejs6.10
@@ -47,10 +46,9 @@ provider:
 package:
   individually: true
 
-# The `functions` block defines what code to deploy
 functions:
   server:
-    handler: lambdas/server.handler
+    handler: src/functions/server/server.handler
     events:
       - http:
           method: GET
@@ -60,7 +58,7 @@ functions:
           path: /_next/{proxy+}
 
   status:
-    handler: lambdas/status/status.handler
+    handler: src/functions/status/status.handler
     events:
       - http:
           method: get
