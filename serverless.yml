@@ -14,23 +14,16 @@ plugins:
 # See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
 custom:
   webpackIncludeModules: true
-#  webpackIncludeModules:
-#    forceInclude:
-#      - next
   domains:
     development: 'swn.dev.vadorequest.fr'
   memorySizes: # TODO Check how much is actually needed
     development: 512
   customDomain:
+    enabled: true # TODO Pass this to false if you don't want to use a custom domain (custom domain is currently recommended because it fixes sub routes, but not really if you just wanna play around, see "Known issues")
     domainName: ${self:custom.domains.${self:provider.stage}}
 #    basePath: '' # This will be prefixed to all routes
     stage: ${self:provider.stage}
     createRoute53Record: true
-  simulate:
-    dist: docker
-#    services:
-#      file: docker-compose.yml
-#      projectName: serverless-with-next
 
 provider:
   name: aws
@@ -41,7 +34,6 @@ provider:
   memorySize: ${self:custom.memorySizes.${self:provider.stage}}
   environment:
     NODE_ENV: ${self:provider.stage}
-
 
 package:
   individually: true
@@ -55,7 +47,13 @@ functions:
           path: /
       - http:
           method: GET
-          path: /_next/{proxy+}
+          path: /static/{any+}
+      - http:
+          method: GET
+          path: /_next/{proxy+} # Catch Next specific routes
+      - http:
+          method: GET
+          path: /{any+} # Catch all unknown routes and redirect to main handler
 
   status:
     handler: src/functions/status/status.handler

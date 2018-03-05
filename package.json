@@ -51,6 +51,6 @@
     "webpack-node-externals": "1.6.0"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Vadorequest (http://github.com/vadorequest)",
+  "license": "MIT"
 }

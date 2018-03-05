@@ -5,9 +5,17 @@ This is a tutorial/showcase to make Serverless (https://serverless.com) work wit
 It's also an in-depth explanation of what are the steps to put those two together.
 The goal being to make a [Serverless template](https://github.com/serverless/serverless/tree/master/lib/plugins/create/templates) for ease of use.
 
+**Notice**: This project is under development/debug. I wouldn't recommend to use it as-it for production use. It's a great resource as a getting started and in order to understand how Next and Serverless work together, but there are a few **Known issues** you must be aware of before using this in a production environment.
+
+    => Use this if you want to play around
+    => Take a look at https://github.com/apex/up-examples/tree/master/oss/node-next if you're fine with an alternative solution that doesn't use Serverless framework, but Up instead. (https://up.docs.apex.sh/)
+
+---
+
 # Getting started
 
 - `git clone git@github.com:Vadorequest/serverless-with-next.git`
+- Disable `serverless.yml:custom:customDomain` or configure your own custom domain on AWS and then run `sls create_domain` (can take 20-40 minutes) _[See "Known issues"]_ [See SLS Tutorial](https://serverless.com/blog/serverless-api-gateway-domain/#create-a-custom-domain-in-api-gateway)
 - `npm i`
 - `npm start` (starts development server)
 - Go to `http://localhost:3000/` (hello world) and `http://localhost:3000/test` (404)
@@ -38,6 +46,7 @@ This tutorial assume:
 - a basic knowledge of Next.js. (see https://learnnextjs.com)
 - an AWS account, `sls deploy` commands will deploy on AWS (another provider is possible, but the `serverless.yml` will need to be modified)
 - node < `6.9.3` installed, I personally used `8.9.4`, doesn't matter so much because we use webpack. (See [supported-languages](https://serverless.com/framework/docs/platform/commands/run#supported-languages))
+- (optional) The use of a custom domain to fix a Known issue (see https://github.com/amplify-education/serverless-domain-manager), can simply be disabled to play around
 
 # Acknowledgements
 
@@ -45,6 +54,26 @@ I am just a beginner with Serverless and Next.js
 
 https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
 but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
+
+
+## Known issues
+    
+1. On AWS, I can't get Next.js to work correctly because of the Serverless `staging` path rewrite:
+   
+   The main page (`https://11lwiykejg.execute-api.us-east-1.amazonaws.com/development/`) works fine, but:
+   
+    - when clicking on a "Page 2" link, it goes to the wrong URL: `https://11lwiykejg.execute-api.us-east-1.amazonaws.com/page2`, it's missing the `/development` part and the browser will display `{"message":"Forbidden"}`
+    - **Current workaround**: I **used a custom domain**, it fixes the missing `development` part (by removing the `staging` part of the url entirely, which fixes the issue):
+        - https://swn.dev.vadorequest.fr
+        - https://swn.dev.vadorequest.fr/page2
+        
+    [See issue](https://github.com/Vadorequest/serverless-with-next/issues/5)
+            
+1. Static `png` file don't display on AWS, reason unknown (works fine in local). They are correctly packaged in the `.serverless` folder but aren't accessible online. `svg` work fine though.
+
+    [See issue](https://github.com/Vadorequest/serverless-with-next/issues/5)
+
+---
 
 # Steps (tutorial, from scratch)
 
@@ -267,30 +296,3 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
         But we basically don't want to package the `.next` build with our other endpoints.
         
         
-## Issues
-    
-- On AWS, I can't get Next.js to work:
-
-    1. `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev` works almost correctly, but it doesn't act as a main entry point for the Next.js application.
-        Basically, only the index is handled by Next.js, but not the other pages. It should display a 404 page.
-        Console error: `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js net::ERR_ABORTED`
-        The URL is wrong, it should be `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js` (the `dev` part is missing)
-        
-        When I go to `https://bcwl62lv2e.execute-api.us-east-1.amazonaws.com/dev/_next/59de0360-2226-486a-aa6b-3e6c4640fffc/page/index.js` manually, I get the following: `Error: INVALID_BUILD_ID`
-        
-        ```
-        Error: INVALID_BUILD_ID
-        at Server._callee12$ (/var/task/node_modules/next/dist/server/index.js:632:29)
-        at tryCatch (/var/task/node_modules/regenerator-runtime/runtime.js:62:40)
-        at GeneratorFunctionPrototype.invoke [as _invoke] (/var/task/node_modules/regenerator-runtime/runtime.js:296:22)
-        at GeneratorFunctionPrototype.prototype.(anonymous function) [as next] (/var/task/node_modules/regenerator-runtime/runtime.js:114:21)
-        at step (/var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:17:30)
-        at /var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:35:14
-        at Promise.F (/var/task/node_modules/core-js/library/modules/_export.js:35:28)
-        at Object.<anonymous> (/var/task/node_modules/babel-runtime/helpers/asyncToGenerator.js:14:12)
-        at Object._nextBuildIdPagePathJs [as fn] (/var/task/node_modules/next/dist/server/index.js:714:27)
-        at Router._callee$ (/var/task/node_modules/next/dist/server/router.js:81:60)
-
-        ```
-        
-        => Workaround: Use custom domain, it fixes the missing `dev` part of the path, but other paths than "/" are still not handled by the server endpoint
