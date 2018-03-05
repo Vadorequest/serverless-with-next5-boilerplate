@@ -12,7 +12,6 @@
     "deploy:staging": "cross-env-shell NODE_ENV=staging \"npm run build:staging && serverless deploy -v --package .serverless\"",
     "deployf:staging": "cross-env-shell NODE_ENV=staging \"npm run build:staging && serverless deploy -v --package .serverless -f server\"",
     "deploy:production": "cross-env-shell NODE_ENV=production \"npm run build:production && serverless deploy -v --package .serverless\"",
-    "simulate": "sls simulate apigateway -p 5000",
     "test:create": "sls create test --path {function}",
     "test": "jest"
   },
@@ -29,7 +28,6 @@
     "copy-webpack-plugin": "4.4.2",
     "jest": "22.4.2",
     "serverless-domain-manager": "2.3.3",
-    "serverless-plugin-simulate": "0.0.17",
     "serverless-jest-plugin": "0.1.6",
     "serverless-offline": "3.18.0",
     "serverless-webpack": "4.3.0",

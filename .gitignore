@@ -7,6 +7,7 @@ jspm_packages
 .idea
 .webpack
 .next
+dist
 
 .DS_Store
 .sls-simulate-registry

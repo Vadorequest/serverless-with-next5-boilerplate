@@ -26,8 +26,8 @@ module.exports = {
   plugins,
   // Generate sourcemaps for proper error messages
   devtool: 'source-map',
-  // Since 'aws-sdk' is not compatible with webpack,
-  // we exclude all node dependencies
+  // We use webpack-node-externals to excludes all node deps. (like aws-sdk)
+  // You can manually set the externals too.
   externals: [nodeExternals()],
   // Run babel on all .js files and skip those in node_modules
   module: {
