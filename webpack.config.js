@@ -3,6 +3,7 @@ const nodeExternals = require("webpack-node-externals");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const plugins = [
+  // XXX Find a way to add those folders only for the server function
   new CopyWebpackPlugin([
     {
       from: '.next/**',

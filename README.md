@@ -83,10 +83,132 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
     
     See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
 
+1. Routing happens server-side even when request comes from client `<Link>` element
+    
+    I'm not quite sure about that, but I feel like the client-side browsing is broken and it does server-side requests when following links.
+    I just noticed network calls when navigating, which is odd. 
+
 
 ---
 
-# Steps (tutorial, from scratch)
+# In-depth diving of the configuration
+
+This part aims at giving you explanations about why is the project configured this way, we'll go deep in the configuration in order to explain the choices and understand the reasons behind.
+
+It's perfect if you want to understand how all the pieces are working together, just skip it if
+
+## Serverless plugins
+
+### 1. [serverless-webpack](https://github.com/serverless-heaven/serverless-webpack)
+
+Used to be able to use the latest JS version, in combination with Babel.
+
+One downside of using this plugin is the fact we can't rely on the official [SLS documentation](https://serverless.com/framework/docs/providers/aws/guide/packaging/) about how to package anymore. [Source](https://github.com/serverless-heaven/serverless-webpack/issues/333#issuecomment-370517673)
+
+Since the packaging is done using `serverless-webpack`, we can't follow https://serverless.com/framework/docs/providers/aws/guide/packaging/ doc to do the packaging.
+
+On the other hand, we don't (usually) have to worry about what node module to include for each function, since the plugin does it for us using some kind of smart scan to detect what are the needed dependencies.
+
+Nevertheless, in some case you may need to override the default behavior and [forceInclude/forceExclude](https://github.com/serverless-heaven/serverless-webpack#forced-inclusion) some packages. 
+
+In addition, we use the `CopyWebpackPlugin`, to copy the `.next` and `static` folder during packaging.
+
+### 1. [serverless-offline](https://github.com/dherault/serverless-offline) - AWS provider only!
+
+Must-needed for local development. Kind of simulate lambda functions with local endpoints for ease of development. Time saver.
+
+Read its doc is a must-do.
+
+### 1. [serverless-jest-plugin](https://github.com/SC5/serverless-jest-plugin)
+
+> Plugin for Serverless Framework which adds support for test-driven development using Jest
+
+Note: Not really used but can be a nice addition, I'm thinking about removing it. Not important.
+
+### 1. [serverless-domain-manager](https://github.com/amplify-education/serverless-domain-manager)
+
+> Serverless plugin for managing custom domains with API Gateways.
+
+Custom domain is kind of a must-have in any production application.
+
+Especially because when you delete your stack and recreate it, or change the region, it'll change the endpoint url. 
+You need a fixed url that doesn't change for production usage. (I do)
+
+## Webpack advanced
+
+1. `webpack-node-externals`
+
+Read more at https://github.com/serverless-heaven/serverless-webpack#node-modules--externals
+
+Basically, stuff like `aws-sdk` are automatically removed and not bundled/uploaded to AWS.
+
+## Babel config (`.babelrc`)
+
+We enabled `next/babel` preset as explained in the official documentation at https://github.com/zeit/next.js#customizing-babel-config
+
+Additionally, we force to transpile the code to node 6.10 version to avoid any issue in the AWS environment
+
+We also enable source map support.
+
+**Important:** `babel-runtime` and `source-map-support` must be in the `package.json:dependencies` or your build will fail on AWS.
+Both those modules are needed at runtime and you'll run into issues if you move them to `devDependencies`.
+
+On the other hand, moving a casual package from `dependencies` to `devDependencies` like `moment` will have no side effect since `serverless-webpack` should resolve it and bundle it anyway.
+But for the sake of understanding, better split packages correctly between both.
+
+## Next
+
+### next.config.js
+
+Due to a webpack's bug/unwanted behavior, we get warnings/errors due to missing fs module. See https://github.com/evanw/node-source-map-support/issues/155
+
+### Static
+
+Next looks for static files in the `./static` folder. We kept the folder in the root folder for the sake of simplicity.
+
+You can customize it a bit following [Next documentation](https://github.com/zeit/next.js/#exposing-configuration-to-the-server--client-side)
+
+I highly recommend not to use static folder, and prefer using an external S3 bucket or CDN for that purpose.
+
+The main reason is to speedup deployment, since Serverless/Webpack will bundle those static assets every time you use `sls deploy`.
+If you have too many static assets, it'll make it last longer, and if your internet connection is weak, upload can become quite long.
+And I don't think Next serves files faster than S3 does.
+Also, you pay for files you upload on Lambda, so...
+
+But for playing around, it's perfectly fine.
+
+### Pages
+
+Next "Pages" are in the `/pages` folder and [can't be moved in another folder](https://github.com/zeit/next.js/issues/3921).
+
+
+### Version
+
+We use the non-stable version `5.0.1-canary.9` because they fix a webpack bug in that particular version and we can't use an older one.
+Feel free to update to a more recent version though. I'm waiting for "canary" version to be released.
+
+## Serverless
+
+TODO
+
+### Functions
+TODO How to catch all routes (main handler)
+
+## Utils
+
+### Logging
+
+I put together a not-so-great logging helper. It does resolve webpack source map on AWS and that's its most interesting feature.
+I also used `stacktrace-js` for better stacktrace, it looked interesting but I never used it before.
+
+Anyway, if you don't like it, just throw it away. Suggestions/improvements are welcome.
+
+---
+
+# DEPRECATED, WON'T MAINTAIN ~~Steps (tutorial, from scratch)~~
+
+> I started this repo with this tutorial, to write down the steps I went through, but I don't actually maintain it anymore, too much has happened and it doesn't really match between those examples and the current version.
+> I'm keeping it in case somebody would want to do the same. Most of the knowledge I've acquired from it is now explained in the previous "Deep dive" part.
 
 1. Run `sls create --template hello-world --path serverless-with-next` (optionally ignore `.idea` folder)
 1. Test using `sls deploy` should print something like this:
