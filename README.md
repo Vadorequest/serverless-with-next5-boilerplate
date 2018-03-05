@@ -37,6 +37,7 @@ We are going to start from the most simple template (`hello-world`) and add what
 - es6 (with source map support)
 - development ease (using [serverless-offline](https://github.com/dherault/serverless-offline))
 - stages (production, staging, development)
+- static assets (but I recommend **against** using heavy static assets, it increases the build size, and the upload time to AWS since they are deployed at every `sls deploy`, better to use a separated S3 bucket)
 
 # Requirements
 
@@ -60,7 +61,7 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
     
 1. On AWS, I can't get Next.js to work correctly because of the Serverless `staging` path rewrite:
    
-   The main page (`https://11lwiykejg.execute-api.us-east-1.amazonaws.com/development/`) works fine, but:
+    The main page (`https://11lwiykejg.execute-api.us-east-1.amazonaws.com/development/`) works fine, but:
    
     - when clicking on a "Page 2" link, it goes to the wrong URL: `https://11lwiykejg.execute-api.us-east-1.amazonaws.com/page2`, it's missing the `/development` part and the browser will display `{"message":"Forbidden"}`
     - **Current workaround**: I **used a custom domain**, it fixes the missing `development` part (by removing the `staging` part of the url entirely, which fixes the issue):
@@ -71,7 +72,17 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
             
 1. Static `png` file don't display on AWS, reason unknown (works fine in local). They are correctly packaged in the `.serverless` folder but aren't accessible online. `svg` work fine though.
 
+    - **Current workaround**: Use an external S3 bucket (or CDN-like), it's also recommended to avoid uploading static assets at every serverless deploy.
+    
     [See issue](https://github.com/Vadorequest/serverless-with-next/issues/5)
+
+1. Useless files are packaged and uploaded to AWS:
+  
+    The `.next` and `static` folders are packaged for all functions, which is useless because only the server handler will use them. 
+    Since I'm using Webpack to copy both those folders (and not SLS native packaging because we use `serverless-webpack` which isn't compatible), I don't know how to ignore those folders for certain functions.
+    
+    See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
+
 
 ---
 
@@ -294,5 +305,4 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
         
         We package each function individually (doesn't change anything now because we only have one)
         But we basically don't want to package the `.next` build with our other endpoints.
-        
         
