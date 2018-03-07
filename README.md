@@ -95,7 +95,7 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
 
 This part aims at giving you explanations about why is the project configured this way, we'll go deep in the configuration in order to explain the choices and understand the reasons behind.
 
-It's perfect if you want to understand how all the pieces are working together, just skip it if
+It's perfect if you want to understand how all the pieces are working together, just skip it if you're not interested.
 
 ## Serverless plugins
 
