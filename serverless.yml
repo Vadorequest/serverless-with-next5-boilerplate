@@ -51,7 +51,7 @@ functions:
           method: GET
           path: /_next/{proxy+} # Catch Next specific routes
       - http:
-          method: GET
+          method: ANY
           path: /{any+} # Catch all unknown routes and redirect to main handler
 
   status:

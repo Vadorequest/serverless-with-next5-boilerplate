@@ -20,7 +20,7 @@ The goal being to make a [Serverless template](https://github.com/serverless/ser
 - `npm start` (starts development server)
 - Go to `http://localhost:3000/` (hello world) and `http://localhost:3000/test` (404)
 
-# WHY?
+# Why?
 
 Because Next.js helps building SSR react applications and serverless helps to deploy them on any cloud provider. (AWS, Google Cloud, etc.)
 
@@ -28,34 +28,67 @@ In my case, I need to render my homepage based on settings I must fetch from a D
 
 We could use `create-react-app` and just deploy the bundled version, but SEO wouldn't be great.
 
-# HOW?
-
-We are going to start from the most simple template (`hello-world`) and add what's necessary.
-
 # Features
 
-- es6 (with source map support)
-- development ease (using [serverless-offline](https://github.com/dherault/serverless-offline))
-- stages (production, staging, development)
-- static assets (but I recommend **against** using heavy static assets, it increases the build size, and the upload time to AWS since they are deployed at every `sls deploy`, better to use a separated S3 bucket)
+- **es6** (with source map support)
+- ~~development ease~ (using [serverless-offline](https://github.com/dherault/serverless-offline))
+- **stages** (production, staging, development)
+- **static assets** (but I recommend **against** using heavy static assets, it increases the build size, and the upload time to AWS since they are deployed at every `sls deploy`, better to use a separated S3 bucket)
+- **express server**, powering Next application but also potentially whatever else you need
+- **HTTP/2**, for all requests sent through HTTPS, HTTP/1.1 is used for HTTP requests (this is just standard AWS behaviour, nothing particular has been done to enable this)
+
+# Routing workflow
+
+## Scenario 1 - GET `/`
+
+Here is how a standard GET request will flow, assuming we call `/` (`https://swn.dev.vadorequest.fr/` in our example):
+
+1. Hit `server` function route because of `path: /` (`serverless.yml`)
+1. Hit `server.js:handler` proxy (`/src/functions/server/server.js`)
+1. Hit the rule `app.get('*')` which proxies the Next app and run `nextProxy(req, res);`, which is then treated by the Next app
+1. Next app will resolve the `/` path by resolving it to `/pages/index.js`
+
+## Scenario 2 - GET `/status`
+
+Here is how a standard GET request will flow, assuming we call `/status` (`https://swn.dev.vadorequest.fr/status` in our example):
+
+1. Hit `status` function route because of `path: status` (`serverless.yml`)
+1. Hit `status.js:handler` proxy (`/src/functions/status/status.js`)
+
+## Scenario 3 - GET `/whatever/nested`
+
+Here is how a standard GET request will flow, assuming we call `/whatever/nested` (`https://swn.dev.vadorequest.fr/whatever/nested` in our example):
+
+1. Hit `server` function route because of `path: /{any+}` (`serverless.yml`)
+1. Hit `server.js:handler` proxy (`/src/functions/server/server.js`)
+1. Hit the rule `app.get('/:level1/:level2')` which will return a JSON response `{"level1":"whatever","level2":"nested"}`
+
+## Scenario 4 - GET `/whatever/nested/deep`
+
+Here is how a standard GET request will flow, assuming we call `/whatever/nested/deep` (`https://swn.dev.vadorequest.fr/whatever/nested/deep` in our example):
+
+1. Hit `server` function route because of `path: /{any+}` (`serverless.yml`)
+1. Hit `server.js:handler` proxy (`/src/functions/server/server.js`)
+1. Hit the rule `app.get('*')` which proxies the Next app and run `nextProxy(req, res);`, which is then treated by the Next app
+1. Next app will fail to resolve the `/whatever/nested/deep` path and display a 404 because no **page** match for this URL
+
+## Routing summary
+
+With the previous examples, we can see that our **functions** routes have the most important **priority**.
+
+Then, when redirected to our **main handler**, and it's the **Express** framework who deals with the routing.
+
+And then, depending on our Express routing, the Next app will handle the request, or not.
 
 # Requirements
 
-This tutorial assume:
+This project assume:
 
 - a basic knowledge of Serverless, with the `serverless` cli installed. (see https://serverless.com/learn/quick-start/)
 - a basic knowledge of Next.js. (see https://learnnextjs.com)
 - an AWS account, `sls deploy` commands will deploy on AWS (another provider is possible, but the `serverless.yml` will need to be modified)
 - node < `6.9.3` installed, I personally used `8.9.4`, doesn't matter so much because we use webpack. (See [supported-languages](https://serverless.com/framework/docs/platform/commands/run#supported-languages))
 - (optional) The use of a custom domain to fix a Known issue (see https://github.com/amplify-education/serverless-domain-manager), can simply be disabled to play around
-
-# Acknowledgements
-
-I am just a beginner with Serverless and Next.js
-
-https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
-but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
-
 
 ## Known issues
     
@@ -76,6 +109,14 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
     Since I'm using Webpack to copy both those folders (and not SLS native packaging because we use `serverless-webpack` which isn't compatible), I don't know how to ignore those folders for certain functions.
     
     See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
+
+
+# Acknowledgements
+
+I am just a beginner with Serverless and Next.js
+
+https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
+but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
 
 
 ---

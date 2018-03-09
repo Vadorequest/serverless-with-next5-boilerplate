@@ -9,7 +9,7 @@ import {isHostedOnAWS} from "../../utils/aws";
 // XXX next.dev enables HMR, which we don't want if not in development mode, or when we are on AWS's infrastructure
 const nextApp = next({ dev: !isHostedOnAWS() && process.env.NODE_ENV === 'development' });
 
-const handle = nextApp.getRequestHandler();
+const nextProxy = nextApp.getRequestHandler();
 const app = express();
 
 app.use(compression()); // See https://github.com/expressjs/compression/issues/133
@@ -32,7 +32,6 @@ app.get('/event', (req, res) => {
 app.get('/static/:filename', (req, res) => {
   console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
   const filepath = path.resolve(`${__dirname}/../../../static/${req.params.filename}`);
-  console.log(filepath)
   res.sendFile(filepath)
 });
 
@@ -53,9 +52,10 @@ app.get('/:level1/:level2', (req, res) => {
 
 app.get('*', (req, res) => {
   console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
-  handle(req, res);
+  nextProxy(req, res);
 });
 
+// TODO Not correctly used at the moment (serverless-offline bypasses this)
 if(!isHostedOnAWS() && process.env.NODE_ENV === 'development'){
   app.listen(3000, (err) => {
     if (err) throw err;
