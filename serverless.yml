@@ -47,14 +47,12 @@ functions:
       - http:
           method: GET
           path: /static/{any+}
-          request:
-            passThrough: WHEN_NO_MATCH
       - http:
           method: GET
           path: /_next/{proxy+} # Catch Next specific routes
-#      - http:
-#          method: GET
-#          path: /{any+} # Catch all unknown routes and redirect to main handler
+      - http:
+          method: GET
+          path: /{any+} # Catch all unknown routes and redirect to main handler
 
   status:
     handler: src/functions/status/status.handler

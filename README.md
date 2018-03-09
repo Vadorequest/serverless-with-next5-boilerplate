@@ -70,23 +70,12 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
         
     [See issue](https://github.com/Vadorequest/serverless-with-next/issues/5)
             
-1. Static `png` file don't display on AWS, reason unknown (works fine in local). They are correctly packaged in the `.serverless` folder but aren't accessible online. `svg` work fine though.
-
-    - **Current workaround**: Use an external S3 bucket (or CDN-like), it's also recommended to avoid uploading static assets at every serverless deploy.
-    
-    [See issue](https://github.com/Vadorequest/serverless-with-next/issues/5)
-
 1. Useless files are packaged and uploaded to AWS:
   
     The `.next` and `static` folders are packaged for all functions, which is useless because only the server handler will use them. 
     Since I'm using Webpack to copy both those folders (and not SLS native packaging because we use `serverless-webpack` which isn't compatible), I don't know how to ignore those folders for certain functions.
     
     See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
-
-1. Routing happens server-side even when request comes from client `<Link>` element
-    
-    I'm not quite sure about that, but I feel like the client-side browsing is broken and it does server-side requests when following links.
-    I just noticed network calls when navigating, which is odd. 
 
 
 ---

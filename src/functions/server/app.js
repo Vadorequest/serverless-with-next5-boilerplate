@@ -1,7 +1,7 @@
-
 import path from 'path';
 import express from 'express';
 import next from "next";
+import compression from 'compression';
 import awsServerlessExpressMiddleware from 'aws-serverless-express/middleware';
 
 import {isHostedOnAWS} from "../../utils/aws";
@@ -12,6 +12,7 @@ const nextApp = next({ dev: !isHostedOnAWS() && process.env.NODE_ENV === 'develo
 const handle = nextApp.getRequestHandler();
 const app = express();
 
+app.use(compression()); // See https://github.com/expressjs/compression/issues/133
 app.use(awsServerlessExpressMiddleware.eventContext());
 
 
@@ -35,18 +36,18 @@ app.get('/static/:filename', (req, res) => {
   res.sendFile(filepath)
 });
 
-app.get('/:group', (req, res) => {
+app.get('/:level1', (req, res) => {
   console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
   res.json({
-    group: req.params.group
+    level1: req.params.level1
   })
 });
 
-app.get('/:group/:school', (req, res) => {
+app.get('/:level1/:level2', (req, res) => {
   console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
   res.json({
-    group: req.params.group,
-    school: req.params.school,
+    level1: req.params.level1,
+    level2: req.params.level2,
   })
 });
 
