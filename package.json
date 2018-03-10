@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Serverless with Next",
   "scripts": {
-    "start": "concurrently -p '{name}' -n 'next,serverless' -c 'gray.bgWhite,yellow.bgBlue' \"next\" \"serverless offline --port 3000\"",
+    "start": "concurrently -p '{name}' -n 'next,serverless' -c 'gray.bgWhite,yellow.bgBlue' \"next -p 3001\" \"serverless offline start\"",
     "next": "next",
     "next:build": "next build",
     "build": "cross-env-shell NODE_ENV=staging \"next build && serverless package\"",
@@ -42,6 +42,7 @@
     "babel-runtime": "6.26.0",
     "compression": "1.7.2",
     "express": "4.16.2",
+    "express-http-proxy": "1.1.0",
     "isomorphic-fetch": "2.2.1",
     "lodash.get": "4.4.2",
     "moment": "2.21.0",

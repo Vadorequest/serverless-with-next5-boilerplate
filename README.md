@@ -1,14 +1,12 @@
 Serverless with Next
 ===================
 
-This is a tutorial/showcase to make Serverless (https://serverless.com) work with Next.js (https://github.com/zeit/next.js/).
+This is a showcase to make Serverless (https://serverless.com) work with Next.js (https://github.com/zeit/next.js/).
 It's also an in-depth explanation of what are the steps to put those two together.
 The goal being to make a [Serverless template](https://github.com/serverless/serverless/tree/master/lib/plugins/create/templates) for ease of use.
 
-**Notice**: This project is under development/debug. I wouldn't recommend to use it as-it for production use. It's a great resource as a getting started and in order to understand how Next and Serverless work together, but there are a few **Known issues** you must be aware of before using this in a production environment.
-
-    => Use this if you want to play around
-    => Take a look at https://github.com/apex/up-examples/tree/master/oss/node-next if you're fine with an alternative solution that doesn't use Serverless framework, but Up instead. (https://up.docs.apex.sh/)
+**Notice**: This project has reached a maturity where it can be used for production application (March 10, 2018). 
+I will personally use it as such, but it is still very young and issues will likely arise.
 
 ---
 
@@ -16,9 +14,21 @@ The goal being to make a [Serverless template](https://github.com/serverless/ser
 
 - `git clone git@github.com:Vadorequest/serverless-with-next.git`
 - Disable `serverless.yml:custom:customDomain` or configure your own custom domain on AWS and then run `sls create_domain` (can take 20-40 minutes) _[See "Known issues"]_ [See SLS Tutorial](https://serverless.com/blog/serverless-api-gateway-domain/#create-a-custom-domain-in-api-gateway)
+- (optional) `nvm use` if using nvm, or make sure you are using node `6.10`
 - `npm i`
-- `npm start` (starts development server)
-- Go to `http://localhost:3000/` (hello world) and `http://localhost:3000/test` (404)
+- `npm start` (starts development server, powered by serverless-offline) _(Note: serverless-offline only support AWS at the moment)_
+- Go to: 
+    - `http://localhost:3000/ko` (json) [serverless-offline powering express server]
+    - `http://localhost:3000/status` (json) [serverless-offline powering provider function "status"]
+    - `http://localhost:3000/` (hello world) [next.js app]
+    - `http://localhost:3000/page2` (hello world 2) [next.js app]
+    - `http://localhost:3000/test` (404) [next.js app]
+- (optional) npm run deploy _(should work on any provider, only tested against AWS though [need changes on `serverless.yml`])_
+- You can check that the AWS-hosted app behaves exactly the same as the local app at [https://swn.dev.vadorequest.fr](https://swn.dev.vadorequest.fr)
+
+You can check the SSR by looking at the browser console "Network" panel when going on `http://localhost:3000/page2` 
+from `http://localhost:3000` through the link (client-side redirection, no SSR) 
+or directly by pasting/typing the url (SSR)
 
 # Why?
 
@@ -30,12 +40,13 @@ We could use `create-react-app` and just deploy the bundled version, but SEO wou
 
 # Features
 
-- **es6** (with source map support)
-- ~~development ease~ (using [serverless-offline](https://github.com/dherault/serverless-offline))
-- **stages** (production, staging, development)
-- **static assets** (but I recommend **against** using heavy static assets, it increases the build size, and the upload time to AWS since they are deployed at every `sls deploy`, better to use a separated S3 bucket)
-- **express server**, powering Next application but also potentially whatever else you need
-- **HTTP/2**, for all requests sent through HTTPS, HTTP/1.1 is used for HTTP requests (this is just standard AWS behaviour, nothing particular has been done to enable this)
+- **ES6** (with source map support)
+- **Development ease**, identical behaviours between local and AWS environments (using [serverless-offline](https://github.com/dherault/serverless-offline))
+- **Stages** (production, staging, development)
+- **Static assets** (but I recommend **against** using heavy static assets, it increases the build size, and the upload time to AWS since they are deployed at every `npm run deploy`, better to use a separated S3 bucket)
+- **Express server**, powering Next application but also potentially whatever else you need
+- **HTTP/2**, this is just standard AWS behaviour (nothing particular has been done to enable this)
+
 
 # Routing workflow
 
@@ -76,7 +87,7 @@ Here is how a standard GET request will flow, assuming we call `/whatever/nested
 
 With the previous examples, we can see that our **functions** routes have the most important **priority**.
 
-Then, when redirected to our **main handler**, and it's the **Express** framework who deals with the routing.
+Then, when redirected to our **main handler**, it's the **Express** framework who deals with the routing.
 
 And then, depending on our Express routing, the Next app will handle the request, or not.
 
@@ -109,15 +120,6 @@ This project assume:
     Since I'm using Webpack to copy both those folders (and not SLS native packaging because we use `serverless-webpack` which isn't compatible), I don't know how to ignore those folders for certain functions.
     
     See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
-
-
-# Acknowledgements
-
-I am just a beginner with Serverless and Next.js
-
-https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
-but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
-
 
 ---
 
@@ -235,7 +237,18 @@ Anyway, if you don't like it, just throw it away. Suggestions/improvements are w
 
 ---
 
+# Acknowledgements
+
+I am just a beginner with Serverless and Next.js
+
+https://github.com/geovanisouza92/serverless-next was my main source of inspiration to put this together, 
+but it was overcomplicated to my taste for a "getting started" and I couldn't understand how to decompose it all into smaller pieces.
+
+---
+
 # DEPRECATED, WON'T MAINTAIN ~~Steps (tutorial, from scratch)~~
+
+<Details>
 
 > I started this repo with this tutorial, to write down the steps I went through, but I don't actually maintain it anymore, too much has happened and it doesn't really match between those examples and the current version.
 > I'm keeping it in case somebody would want to do the same. Most of the knowledge I've acquired from it is now explained in the previous "Deep dive" part.

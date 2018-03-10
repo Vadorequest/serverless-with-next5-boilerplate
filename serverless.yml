@@ -12,6 +12,8 @@ plugins:
 # Enable auto-packing of external modules
 # See https://serverless-stack.com/chapters/add-support-for-es6-es7-javascript.html
 custom:
+  serverless-offline:
+    port: 3000 # We run our SLS endpoints on another port (Next app will run on 3001)
   webpackIncludeModules: true
   domains:
     development: 'swn.dev.vadorequest.fr'
@@ -27,7 +29,7 @@ custom:
 provider:
   name: aws
   runtime: nodejs6.10
-  timeout: 30
+  timeout: 30 # 30 seconds is the maximal allowed by API Gateway
   stage: ${opt:stage, 'development'}
   region: ${opt:region, 'us-east-1'}
   memorySize: ${self:custom.memorySizes.${self:provider.stage}}
