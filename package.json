@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Serverless with Next",
   "scripts": {
-    "start": "concurrently -p '{name}' -n 'next,serverless' -c 'gray.bgWhite,yellow.bgBlue' \"next -p 3001\" \"serverless offline start\"",
+    "start": "concurrently -p '{name}' -n 'next,sls' -c 'gray.bgWhite,yellow.bgBlue' \"next -p 3001\" \"serverless offline start\"",
     "next": "next",
     "next:build": "next build",
     "build": "cross-env-shell NODE_ENV=staging \"next build && serverless package --stage staging\"",
