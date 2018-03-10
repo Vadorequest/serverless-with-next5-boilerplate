@@ -246,9 +246,9 @@ but it was overcomplicated to my taste for a "getting started" and I couldn't un
 
 ---
 
-# DEPRECATED, WON'T MAINTAIN ~~Steps (tutorial, from scratch)~~
-
 <Details>
+
+# DEPRECATED TUTORIAL, WON'T MAINTAIN - ~~Steps (tutorial, from scratch)~~
 
 > I started this repo with this tutorial, to write down the steps I went through, but I don't actually maintain it anymore, too much has happened and it doesn't really match between those examples and the current version.
 > I'm keeping it in case somebody would want to do the same. Most of the knowledge I've acquired from it is now explained in the previous "Deep dive" part.
