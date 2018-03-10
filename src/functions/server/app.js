@@ -51,33 +51,9 @@ app.get('/:level1/:level2', (req, res, callback) => {
   })
 });
 
-if(!isHostedOnAWS()) {
-  // XXX Attempt to make HMR work on :3000 - WIP not working
-  // app.use('/_next', proxy('http://localhost:3001/_next'));
-  // app.use('/_next/webpack-hmr', proxy('http://localhost:3001/_next/webpack-hmr'));
-  // app.use('/_next/-/page/index.js', proxy('http://localhost:3001/_next/-/page/index.js'));
-  // app.use('/_next/-/page/_error.js', proxy('http://localhost:3001/_next/-/page/_error.js'));
-  // app.use('/_next/-/manifest.js', proxy('http://localhost:3001/_next/-/manifest.js'));
-  // app.use('/_next/-/commons.js', proxy('http://localhost:3001/_next/-/commons.js'));
-  // app.use('/_next/-/main.js', proxy('http://localhost:3001/_next/-/main.js'));
-  // app.use('/_next/', proxy('http://localhost:3001/_next/'));
-  app.use('/_next/webpack-hmr', proxy('http://localhost:3001/_next/webpack-hmr', {
-    preserveHostHdr: true,
-    userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
-      headers['Content-Type'] = 'text/event-stream';
-      return headers;
-    }
-  }));
-
-  // XXX In local environment, we proxy all OTHER requests to Next.js application (because nextProxy fails for some reasons, probably due to .next folder not in the current directory)
-  // The location of those lines is very important, if used at the beginning of the file, then all requests will be affected
-  app.use('/', proxy('http://localhost:3001/'));
-} else {
-  // XXX In AWS environment, we use the native nextProxy to handle the request
-  app.get('*', (req, res) => {
-    console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
-    nextProxy(req, res);
-  });
-}
+app.get('*', (req, res) => {
+  console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
+  nextProxy(req, res);
+});
 
 module.exports = app;
