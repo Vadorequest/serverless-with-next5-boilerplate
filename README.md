@@ -27,9 +27,18 @@ I will personally use it as such, but it is still very young and issues will lik
 - (optional) npm run deploy _(should work on any provider, only tested against AWS though [need changes on `serverless.yml`])_
 - You can check that the AWS-hosted app behaves exactly the same as the local app at [https://swn.dev.vadorequest.fr](https://swn.dev.vadorequest.fr)
 
-You can check the SSR by looking at the browser console "Network" panel when going on `http://localhost:3000/page2` 
+- You can check the SSR by looking at the browser console "Network" panel when going on `http://localhost:3000/page2` 
 from `http://localhost:3000` through the link (client-side redirection, no SSR) 
 or directly by pasting/typing the url (SSR)
+
+- All previous routes work on AWS and you can test them without installing anything:
+
+    - `https://swn.dev.vadorequest.fr/ko` (json) [serverless-offline powering express server]
+    - `https://swn.dev.vadorequest.fr/status` (json) [serverless-offline powering provider function "status"]
+    - `https://swn.dev.vadorequest.fr/` (hello world) [next.js app]
+    - `https://swn.dev.vadorequest.fr/page2` (hello world 2) [next.js app]
+    - `https://swn.dev.vadorequest.fr/test` (404) [next.js app]
+    - `https://swn.dev.vadorequest.fr/event` (example of AWS API Gateway event data) [serverless-offline powering express server]
 
 # Why?
 
