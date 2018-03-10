@@ -92,6 +92,29 @@ Then, when redirected to our **main handler**, it's the **Express** framework wh
 
 And then, depending on our Express routing, the Next app will handle the request, or not.
 
+## Development vs production (local vs AWS) stages differences
+
+I tried to limit as much as possible the behaviours differences between the local and AWS environments. (For obvious reasons)
+I did all my tests against AWS and I therefore use it as example, but it's also valid for other providers.
+
+### AWS
+
+On AWS, we upload a package which contains:
+
+    - `/.next`: Next.js build folder
+    - `/src`: Our sources, basically our functions in subfolders
+    
+When we hit an endpoint on AWS, it goes straight to our functions defined in `serverless.yml`. We only have 2 functions:
+    
+    - `status`: Simple `/status` endpoint to display AWS status and data
+    - `server`: All other AWS paths are catched and redirected to our `server` function, which uses Express
+    
+### Local
+
+On local environment, we get the same path structure, with our `/.next` and `/src` folders at the root.
+We have `serverless-offline` running on port 3000, which handles the function calls. It will also proxy everything to our `server` function.
+We also have our Next.js application running on port 3001.
+
 # Requirements
 
 This project assume:
@@ -121,6 +144,24 @@ This project assume:
     Since I'm using Webpack to copy both those folders (and not SLS native packaging because we use `serverless-webpack` which isn't compatible), I don't know how to ignore those folders for certain functions.
     
     See ![](./ss/2018-03-05%2017.58.22%20-%20SLS%20packaging%20useless%20files.png)
+
+1. HMR not working on http://localhost:3000 for Next.js:
+    
+    Next.js comes with HMR, which is great. But it doesn't work on http://localhost:3000 yet. 
+    **It works on http://localhost:3001 though**
+    
+    But it would be a better developer experience to have everything working seamlessly on http://localhost:3000
+
+    - I tried to simply use `nextProxy(req, res)` but got `TypeError: Cannot read property 'waitUntilReloaded' of undefined at HotReloader._callee7$ (/Users/vadorequest/dev/serverless-with-next/node_modules/next/dist/server/hot-reloader.js:658:44)`
+    - Then, I decided to proxy requests that Express doesn't want to handle to 3001, so that Next.js app handles them. But the proxy messes up with HMR and I haven't been able to fix it:
+        - I tried to proxy all `/_next` by doing `app.use('/_next/', proxy('http://localhost:3001/_next/'));` but then I get 404 for all js scripts like `http://localhost:3000/_next/-/main.js`
+        - I tried to proxy them all one by one but then they return HTML content instead of JS (basically the index page), ex: `app.use('/_next/-/main.js', proxy('http://localhost:3001/_next/-/main.js'));`
+        - If you manually browse to `http://localhost:3001/_next/-/main.js` it works okay and return the actual JS file
+        - I tried to disable HMR by setting `dev: false` but then the Next.js app complains `Could not find a valid build in the '.next' directory!`
+        - I tried to force contentType to `text/event-stream` when proxying `/_next/webpack-hmr` and it seem to work okay as long as Express doesn't catch the request first 
+        (which is the case with GET `/:level1/:level2` route), and it does display `[HMR] connected` but nothing happens when a file is changed.
+    
+    [See issue](https://github.com/Vadorequest/serverless-with-next/issues/8)
 
 ---
 

@@ -42,9 +42,9 @@ app.get('/static/:filename', (req, res) => {
 
 app.get('/:level1/:level2', (req, res, callback) => {
   console.log('req from', req.protocol + '://' + req.get('host') + req.originalUrl);
-  // if(req.params.level1 === '_next') { // XXX This path messes up with HMR, attempt to fix
-  //   return callback();
-  // }
+  if(req.params.level1 === '_next') { // XXX This path messes up with HMR, attempt to fix
+    return callback();
+  }
   res.json({
     level1: req.params.level1,
     level2: req.params.level2,
@@ -61,13 +61,13 @@ if(!isHostedOnAWS()) {
   // app.use('/_next/-/commons.js', proxy('http://localhost:3001/_next/-/commons.js'));
   // app.use('/_next/-/main.js', proxy('http://localhost:3001/_next/-/main.js'));
   // app.use('/_next/', proxy('http://localhost:3001/_next/'));
-  // app.use('/_next/webpack-hmr', proxy('http://localhost:3001/_next/webpack-hmr', {
-  //   preserveHostHdr: true,
-  //   userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
-  //     headers['Content-Type'] = 'text/event-stream';
-  //     return headers;
-  //   }
-  // }));
+  app.use('/_next/webpack-hmr', proxy('http://localhost:3001/_next/webpack-hmr', {
+    preserveHostHdr: true,
+    userResHeaderDecorator(headers, userReq, userRes, proxyReq, proxyRes) {
+      headers['Content-Type'] = 'text/event-stream';
+      return headers;
+    }
+  }));
 
   // XXX In local environment, we proxy all OTHER requests to Next.js application (because nextProxy fails for some reasons, probably due to .next folder not in the current directory)
   // The location of those lines is very important, if used at the beginning of the file, then all requests will be affected
