@@ -23,6 +23,7 @@ I will personally use it as such, but it is still very young and issues will lik
     - `http://localhost:3000/` (hello world) [next.js app]
     - `http://localhost:3000/page2` (hello world 2) [next.js app]
     - `http://localhost:3000/test` (404) [next.js app]
+    - `http://localhost:3000/event` (example of AWS API Gateway event data) [serverless-offline powering express server]
 - (optional) npm run deploy _(should work on any provider, only tested against AWS though [need changes on `serverless.yml`])_
 - You can check that the AWS-hosted app behaves exactly the same as the local app at [https://swn.dev.vadorequest.fr](https://swn.dev.vadorequest.fr)
 

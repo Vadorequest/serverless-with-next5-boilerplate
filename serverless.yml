@@ -16,12 +16,18 @@ custom:
     port: 3000 # We run our SLS endpoints on another port (Next app will run on 3001)
   webpackIncludeModules: true
   domains:
-    development: 'swn.dev.vadorequest.fr'
+    enabled_development: false
+    url_development: '' # Unused, just avoid SLS warning variable not found
+    enabled_staging: true # TODO Pass this to false if you don't want to use a custom domain (custom domain is currently recommended because it fixes sub routes, but not really if you just wanna play around, see "Known issues")
+    url_staging: 'swn.dev.vadorequest.fr'
+    enabled_production: true
+    url_production: 'swn.prod.vadorequest.fr' # TODO change
   memorySizes: # TODO Check how much is actually needed
-    development: 512
+    development: 512 # Unused, just avoid SLS warning variable not found
+    staging: 512
   customDomain:
-    enabled: true # TODO Pass this to false if you don't want to use a custom domain (custom domain is currently recommended because it fixes sub routes, but not really if you just wanna play around, see "Known issues")
-    domainName: ${self:custom.domains.${self:provider.stage}}
+    enabled: ${self:custom.domains.enabled_${self:provider.stage}}
+    domainName: ${self:custom.domains.url_${self:provider.stage}}
 #    basePath: '' # This will be prefixed to all routes
     stage: ${self:provider.stage}
     createRoute53Record: true
