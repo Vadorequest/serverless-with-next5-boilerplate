@@ -27,6 +27,8 @@ I will personally use it as such, but it is still very young and issues will lik
 - (optional) npm run deploy _(should work on any provider, only tested against AWS though [need changes on `serverless.yml`])_
 - You can check that the AWS-hosted app behaves exactly the same as the local app at [https://swn.dev.vadorequest.fr](https://swn.dev.vadorequest.fr)
 
+> Edit April 2019: The service [https://swn.dev.vadorequest.fr](https://swn.dev.vadorequest.fr) is not available anymore because AWS deprecated node6 runtime, an this demo hasn't been upgraded
+
 - You can check the SSR by looking at the browser console "Network" panel when going on `http://localhost:3000/page2` 
 from `http://localhost:3000` through the link (client-side redirection, no SSR) 
 or directly by pasting/typing the url (SSR)
