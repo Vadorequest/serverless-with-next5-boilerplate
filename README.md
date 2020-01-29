@@ -1,4 +1,5 @@
-> ### Most recent OSS projects with Next.js:
+> # 2020 update
+> ## Most recent OSS projects with Next.js:
 > - https://github.com/UnlyEd/next-typescript-api-zeit-boilerplate - Focus on the backend, with Zeit and Next
 > - **Planning to release a full reworked version of Next + tons of stuff (similar to this project) around February 2020**
 >
