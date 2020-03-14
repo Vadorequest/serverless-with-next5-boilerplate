@@ -1,7 +1,7 @@
 > # 2020 update
 > ## Most recent OSS projects with Next.js:
 > - https://github.com/UnlyEd/next-typescript-api-zeit-boilerplate - Focus on the backend, with Zeit and Next
-> - **Planning to release a full reworked version of Next + tons of stuff (similar to this project) around February 2020**
+> - https://github.com/UnlyEd/next-right-now - Flexible production-grade boilerplate with Next.js 9 and Zeit Now, with pre-configured Sentry, cookies, Amplitude, Emotion, FontAwesome, GraphQL/GraphCMS (Apollo), Bootstrap (Reactstrap), i18next (Locize), Jest, Cypress (E2E tests) and CI/CD (GH Actions), with full TypeScript support and support for B2B multi-tenants web apps (monorepo)
 >
 > Since 2018, I've been playing a lot with Next.js. This boilerplate is a completely outdated project, and **I strongly advise not to use it in production!** It is **great to understand how things work** because I've gone very deep in the details, but definitely don't consider using this as of 2020. (It features Next 5 while the latest is Next 9.2) 
 
